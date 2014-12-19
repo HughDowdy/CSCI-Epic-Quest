@@ -1,0 +1,164 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\sl240\slmult1\qc\lang9\f0\fs22 Wakka Wakka - Educational Tool Extraodinaire\par
+Hugh Dowdy\par
+December 12, 2014\par
+\pard\sl240\slmult1\par
+  This program utilizes a Command Prompt(cmd.exe) like interface (we'll call it fake CMD) \par
+  to familiarize inexperienced users with a priliminary feel for using cmd or Terminal \par
+  (the Mac equivalent).  The user is exposed to a few Computer Science principles during\par
+  the fake CMD portion, after which the user can play a game I created which is a mix of\par
+  Pac-Man and Snake.  I'm well aware of the fact that the time frames I give throughout this documemnt are extremely vague, but this is a brief synopsis of the process of developing the progam and as such is relatively restricted to particularly pertinent and demanding aspects of the project.  I would advise looking through the code as opposed to reading this, because the processes are thoroughtly documented and commented.\par
+\par
+\ul Initial Skeleton\ulnone\par
+------------------------------------------------------------------------------------------------------------------------\par
+\tab Setup()\par
+\tab Open CMD\par
+\tab loop \tab (to acquire Ghost color, sprite image filename, buttons to bind)\par
+\tab\tab print prompt\par
+\tab\tab store user input\par
+\tab generate images\par
+\tab store in more accessible location for quick reference\par
+------------------------------------------------------------------------------------------------------------------------\par
+\tab Draw()\par
+\tab Initiate\par
+\tab loop\par
+\tab\tab draw using current location\par
+\tab\tab take input\par
+\tab\tab calculate new player location\par
+\tab\tab calculate new delta between Player and NPC\par
+\tab\tab calculate new NPC location w/ intentional error\par
+\tab\tab store new data\par
+\tab\tab collision check\par
+------------------------------------------------------------------------------------------------------------------------\par
+\tab\par
+The final code ended up surpisingly similar to the skeleton, though substantially more sophistocated , including timers, triggers and nested classes.\par
+\par
+\ul Primary Difficulties\par
+\ulnone\tab Opening Command Prompt\par
+\tab\tab After a little research, it became evident that it would be rather difficult to pass\par
+\tab\tab values to and from cmd.exe, starting with a complicated process just to open \par
+\tab\tab the program. \par
+\ul\par
+\ulnone\tab Text positioning\par
+\tab\tab Due to the fact that the solution to using cmd.exe was to generate a similar GUI\par
+\tab\tab that redrew each frame continuously, there was an innate issue with \tab\tab\tab\tab positioning in relying on simple commands like text(String,int,int).\par
+\tab\tab Particularly with respect to trying to form some resemblance to cmd.exe. A \tab\tab\tab significant amount of time was dedicated to calculations, as well as trial and\par
+\tab\tab error; primarily concerning determining font widths and heights, and \tab\tab\tab\tab appropriate positioning based on these factors.\par
+\tab\tab\par
+\tab Jagged movement\par
+\tab\tab As with any graphics processing application, frame rate and processing speed\par
+\tab\tab come into play.  With heavily nested sections, a single iteration can be both \tab\tab\tab resource intensive and generate a discrepency in frame refresh rate, resulting in \tab\tab uneven image pressentation.\par
+\par
+\tab Ghosts developing stripes\par
+\tab\tab There was a point when some ghosts were being rendered with vertical lines \tab\tab\tab while others were being drawn properly.   Though the code used to generate \par
+\tab\tab them was identical, the parameters passed to them had different values.\par
+\par
+\tab Integrating Programs\par
+\tab\tab I had initially split the code into two segments: I/O interaction and the game.  \tab\tab\tab Once these programs were written I ran into difficulty getting them to \tab\tab\tab\tab reference each other, because they both utilized their own setup() and draw()\par
+\tab\tab I was not able to leave them both as they were when it came to uniting them.\par
+\par
+\tab Passing user inputs to game code\par
+\tab\tab I ran into a fair amount of trouble when it came to binding keys determined by \tab\tab\tab the user, and later referencing them.  I had to pass variables from the I/O \tab\tab\tab portion, where the key bindings were generated, to the game code, which \tab\tab\tab relied on these bindings as inputs.\par
+\par
+\tab Collision detection unresponsive\par
+\tab\tab Occasionally the collision detection will have a delayed response or not be \tab\tab\tab triggered at all in a scenario when there has undoubtedly been overlap. This \tab\tab\tab makes the program seem unpolished and come across incomplete. Having said \tab\tab\tab that, this is not particularly frequent.\par
+\par
+\tab returning values\par
+\tab\tab None of the methods I made return a value, i.e. they are all void.  Though this \tab\tab\tab doesn't have any serious implications in this particular application, I would like \tab\tab\tab to have included a few for variety of functionin/code structure (though too \tab\tab\tab much variety in code structure would definitely be an issue).\par
+\par
+\ul Solutions\par
+\ulnone\tab Opening Command Prompt\par
+\tab\tab In order to compensate for the lack of compatibility between processing I/O \tab\tab\tab and cmd.exe, I made my own mimic of the Command Prompt, which serves the \tab\tab\tab purpose of perhaps removing some of the stigma or dauntingness that man \tab\tab\tab new comers feel toward Command Prompt and Terminal.\ul\par
+\ulnone\tab Text positioning\par
+\tab\tab As mentioned in the difficulty section, the only solution to this was thought, \tab\tab\tab time, and trial and error.  Between counting pixels, some simple algebra and \par
+\tab\tab "eyeballing it" I find that I did a decent job representing the terminal feel.\par
+\tab\tab\par
+\tab Jagged movement\par
+\tab\tab My solution to this was to execute the command responsible for determining\par
+\tab\tab the ghosts' direction of motion less frequently.  This is due to the fact that the \tab\tab\tab interactions between Wakka Wakka and the ghosts is constantly changing and \par
+\tab\tab since the ghosts are required to move either horizontally or vertically at a given\par
+\tab\tab time, they would constantly be switching between the two axes of motion.\par
+\par
+\tab Ghosts developing stripes\par
+\tab\tab This was resolved when I changed the speed of the ghosts to integers.  The \par
+\tab\tab parameters used in rendering the ghosts are integers and as such, having a \tab\tab\tab postion that was defined by an int(float) expression resulted in marginal but \tab\tab\tab constant discrepencies and errors.\par
+\par
+\tab Integrating Programs\par
+\tab\tab In the end, I decided to make the splice the I/O setup program with the game \tab\tab\tab program rather than just calling one inside the other.  The primary, executable \par
+\tab\tab program more closely resembles the I/O program, because I decided to turn the \tab\tab game into a class that contained other classes (the rendering segments).\par
+\par
+\tab Passing user inputs to game code\par
+\tab\tab The primary issue from this came in the form of inconsistent data types \tab\tab\tab\tab associated with key strokes, as well as trying to keep congruence in my\par
+\tab\tab setup code, converting everything into strings so that I could have an array\par
+\tab\tab holding all the user inputs.  Whether I would do this a different way in the \tab\tab\tab future, or maintain the consistency, I relied on methods to convert the \tab\tab\tab\tab pertinent segments I needed from the strings.  The setup code does a fairly \tab\tab\tab decent job of ensuring that the correct data types are stored, but if the user\par
+\tab\tab does not follow the instructions, they're likely to get an error since I have \tab\tab\tab implemented minimal error recovery.\par
+\par
+\tab Collision detection unresponsive\par
+\tab\tab I made a clock for debugging using a start time, current time, and the difference \tab\tab between them. I was able to compair the lengths of different methods and \tab\tab\tab found that essentially all of them run between 0-3 milliseconds.  I found that \par
+\tab\tab the method for drawing Wakka Wakka took the longest at ~ 9 milliseconds, due \tab\tab\tab to the fact that the vertices are determined using a handful of simple \tab\tab\tab\tab trigonometric calcuations.  In finding the most resource intensive I was able to \par
+\tab\tab relocate the collisionTest() method in an attempt to remove a bit of the lag.\par
+\tab\tab At best, the collisionTest() method approximates the ghosts as circles, certainly \tab\tab\tab resulting as a source of error. Improving on the collision detection is included in \tab\tab\tab the Additional Features \tab section below.\par
+\par
+\tab returning values\par
+\tab\tab Since this is a fairly simple program that doesn't need to call on others, or be \tab\tab\tab called on itself, having the methods return a value is unnecessary, though it \tab\tab\tab would be another way to achieve some of the commands in the program.  \tab\tab\tab Currently I make alterations to some variables/execute some methods that are\par
+\tab\tab nested in a different location: String.class.method().\par
+\tab\tab\par
+\ul\par
+Prospective Additional Features\par
+\ulnone\tab Decreasing power pellet size as they age\par
+\tab\tab This would add another level of complexity to the game and scoring, though \tab\tab\tab fairly simply implemented.  Making the awarded score proportional to the size \tab\tab\tab of the pellet would also instill a sense of urgency in the user.\par
+\tab error recovery\par
+\tab\tab Without it, an ignorant user or a misplaced finger could result in a crashed \tab\tab\tab program.\par
+\tab Variable number of ghosts\par
+\tab\tab Another aspect of the game that could add complexity and excitement, adding \par
+\tab\tab ghosts as the game progresses is an interesting prospect.\par
+\tab Changing ghost attributes with time\par
+\tab\tab Including variable ghost speed could not only make the game more difficult and \tab\tab\tab entertaining, it offers additional personification of the NPCs; exhaustion level \tab\tab\tab for instance.\par
+\tab eatGhost()\par
+\tab\tab Coupled with adding ghosts, having the ability to remove ghosts when they're \tab\tab\tab vulnerable(blue) as in Pac-Man would substantially increase the entartainment \tab\tab\tab value of the game.\par
+\tab wrapping window\par
+\tab\tab I inadvertently came upon this idea while testing, when my code for ensuring \tab\tab\tab that Wakka Wakka stays within the bounds of the window set his position to \tab\tab\tab the opposite edge of the window.  \par
+\tab More sophistocated collision detection\par
+\tab\tab It would certainly improve the functionality of the program to have a  collision \tab\tab\tab test that better approximates the shape of the ghosts and that faulters less \tab\tab\tab often or not at all.\par
+\ul Referenced Text\par
+\ulnone\tab I spent a large amount of time on the processing and Java APIs, figuring out syntax, \tab functionality, looking at examples and related methods.  Most of the time I didn't know \tab the functioning of a method, but I knew what I wanted to do and a google search, \tab refereing to the processing and oracle websites often quickly gave me a starting point.  \tab Aside from those there are only two instances that I remember utilizing someone elses \tab code outside of looking at examples.  I did not use anyone else's code intentionally.\par
+\par
+ \tab Saving a keystroke to a growing string\par
+\tab\tab Since I had to make my own CMD GUI and wasn't sure on how to store a \tab\tab\tab temporary string or save a key stroke to a string, I was quite lucky to fall upon a \tab\tab\tab forum in which someone did just that.  I'd like to stress that essentially the only \tab\tab\tab portion of that code that remains is the storage of a key stroke and the boolean \tab\tab statements used to determine whether a depressed key is coded or the enter\tab\tab\tab and backspace buttons.\par
+\tab\tab{\field{\*\fldinst{HYPERLINK "https://www.processing.org/discourse/beta/num_1223627482.html"}}{\fldrslt{\ul\cf1 https://www.processing.org/discourse/beta/num_1223627482.html}}}\f0\fs22\par
+\par
+\tab Taking the first character from a string\par
+\tab\tab As mentione in the difficulties section, I relied again on a forum for help in \tab\tab\tab converting a string to a character.  I was well aware that you can't turn a string \tab\tab\tab into a single character, but I was able to find a method that takes a desired \tab\tab\tab character, determined by position in the string, from a string and save it to a \tab\tab\tab char.  And though String.charAt(int) is a well document method, I feel conflicted \tab\tab in saying that I didn't get the idea from someone else.\par
+\tab\tab{\field{\*\fldinst{HYPERLINK "http://stackoverflow.com/questions/7853502/how-to-convert-parse-from-string-to-char-in-java"}}{\fldrslt{\ul\cf1 http://stackoverflow.com/questions/7853502/how-to-convert-parse-from-string-to-char-in-java}}}\f0\fs22\par
+\tab\par
+\tab My take away from this section is that StackOverflow is a phenomenal resource.\par
+\tab\par
+\par
+\ul List of Methods\ulnone\par
+\par
+class WakkaWakka \par
+\tab void CMDScreen()\par
+\tab void CursorLocation()\par
+\tab void draw()\par
+\tab void Declare()\par
+\tab void KeyAssign()\par
+\tab void keyPressed()\par
+\tab void setup\par
+class Game\par
+\tab void endgame()\par
+\tab void nextScreen()\par
+\tab void powerPellet()\par
+class Ghost\par
+\tab void ghost()\par
+\tab void lookyloo()\par
+\tab void mousePressed()\par
+\tab void move()\par
+\tab void powerPellet()\par
+class WakkaWakkaDude\par
+\tab void collisionTest()\par
+\tab void getInput()\par
+\tab void move()\par
+\tab void oneWakka()\par
+}
+ 
